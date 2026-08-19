@@ -13,8 +13,8 @@ export default function Benefits() {
   return (
     <section className="container-x py-24">
       <SectionHeader
-        eyebrow="Por qué Altavista"
-        title={<>Comprar casa debería sentirse <span className="italic text-sand-dark">así de fácil.</span></>}
+        eyebrow="Por qué somos buena opcion"
+        title={<>Comprar una casa debería ser <span className="italic text-sand-dark">así de fácil.</span></>}
         text="Nos encargamos de todo: desde el recorrido hasta la escritura. Tú solo eliges dónde poner el sofá."
       />
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -2,9 +2,9 @@ import Img from "../components/Img";
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { casas, getCasa } from "../data/casas";
-import { mxn, waLink, CONTACTO } from "../lib/format";
+import { mxn, waLink } from "../lib/format";
 import ContactForm from "../components/ContactForm";
-import PropertyCard from "../components/PropertyCard";
+import PropertyCardCompact from "../components/PropertyCardCompact";
 import WhatsAppButton from "../components/WhatsAppButton";
 import {
   IconBed, IconBath, IconCar, IconArea, IconPin, IconCheck, IconWhatsApp,
@@ -142,26 +142,33 @@ export default function CasaDetalle() {
               <div className="my-5 flex items-center gap-3 text-xs text-ink-soft"><span className="h-px flex-1 bg-stone-200" />o déjanos tus datos<span className="h-px flex-1 bg-stone-200" /></div>
               <ContactForm casaSlug={casa.slug} compact />
             </div>
-            <div className="rounded-3xl bg-mist p-6 text-sm">
-              <p className="font-semibold">Asesor {CONTACTO.marca}</p>
-              <p className="mt-1 text-ink-soft">{CONTACTO.telefono}</p>
-              <p className="text-ink-soft">{CONTACTO.email}</p>
-              <p className="mt-2 text-xs text-ink-soft">{CONTACTO.horario}</p>
-            </div>
           </div>
         </aside>
       </section>
 
       {/* Similares */}
-      <section className="container-x mt-24">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-4xl font-medium tracking-tight">Otras propiedades</h2>
-          <Link to="/casas" className="btn-ghost">Ver todas <IconArrow className="h-4 w-4" /></Link>
-        </div>
-        <div className="mt-8 grid gap-8 md:grid-cols-3">
-          {similares.map((c) => <PropertyCard key={c.slug} casa={c} />)}
-        </div>
-      </section>
+      <section className="container-x mt-20 sm:mt-28 mb-16">
+  {/* Encabezado */}
+  <div className="flex items-center justify-between gap-4">
+    <h2 className="font-display text-3xl sm:text-4xl font-medium tracking-tight text-stone-900">
+      Otras propiedades
+    </h2>
+
+    <Link
+      to="/casas"
+      className="inline-flex items-center gap-2 rounded-full border border-stone-300 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-stone-800 transition-colors hover:border-stone-900 hover:bg-stone-900 hover:text-white"
+    >
+      Ver todas <IconArrow className="h-3.5 w-3.5" />
+    </Link>
+  </div>
+
+  {/* Grid 100% Responsive sin encimados */}
+  <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+    {similares.map((c) => (
+      <PropertyCardCompact key={c.slug} casa={c} />
+    ))}
+  </div>
+</section>
 
       <WhatsAppButton mensaje={msgWa} />
     </>

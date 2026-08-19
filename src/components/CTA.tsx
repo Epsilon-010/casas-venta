@@ -20,7 +20,7 @@ export default function CTA() {
           <h2 className="mt-3 font-display text-4xl font-medium leading-[1.05] tracking-tight sm:text-6xl">
             Conoce tu próxima casa <span className="italic text-sand">este fin de semana.</span>
           </h2>
-          <p className="mt-5 text-white/75">Recorridos presenciales o por videollamada. Sin compromiso, con toda la información: precios, planos y opciones de crédito.</p>
+          <p className="mt-5 text-white/75">Recorridos presenciales. Sin compromiso, con toda la información: precios, planos y opciones de crédito.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href={waLink()} target="_blank" rel="noreferrer" className="btn-light"><IconWhatsApp className="h-4 w-4" /> WhatsApp</a>
             <Link to="/contacto" className="btn-ghost border-white/30! bg-white/10! text-white! hover:bg-white/20!">Formulario <IconArrow className="h-4 w-4" /></Link>
