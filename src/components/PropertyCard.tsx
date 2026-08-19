@@ -1,7 +1,7 @@
-import { useRef, useState, type MouseEvent } from "react";
+import { useState } from "react";
 import type { Casa } from "../data/casas";
 import { mxn, waLink } from "../lib/format";
-import { EVENTO_ELEGIR_CASA, irASeccion } from "../lib/secciones";
+import CasaDetalleModal from "./CasaDetalleModal";
 import Img from "./Img";
 import {
   IconArea,
@@ -23,69 +23,19 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
   const [open, setOpen] = useState(false);
+  const [detalle, setDetalle] = useState(false);
   const [foto, setFoto] = useState(0);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 50, active: false });
 
   const invert = index % 2 === 1;
-
-  const onMove = (e: MouseEvent<HTMLDivElement>) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    const max = 10;
-    setTilt({
-      rx: (0.5 - py) * max * 2,
-      ry: (px - 0.5) * max * 2,
-      gx: px * 100,
-      gy: py * 100,
-      active: true,
-    });
-  };
-
-  const onLeave = () => setTilt({ rx: 0, ry: 0, gx: 50, gy: 50, active: false });
-
-  const style3d = {
-    transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-    transition: tilt.active
-      ? "transform 80ms linear"
-      : "transform 700ms cubic-bezier(.2,.7,.2,1)",
-  } as const;
-
-  const meInteresa = () => {
-    window.dispatchEvent(new CustomEvent(EVENTO_ELEGIR_CASA, { detail: casa.slug }));
-    irASeccion("contacto");
-  };
-
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${casa.mapa.lat},${casa.mapa.lng}`;
 
   return (
     <article
       id={casa.slug}
       className="grid w-full scroll-mt-24 grid-cols-1 items-stretch gap-4 sm:gap-5 lg:grid-cols-12"
     >
-      {/* ---------- Imagen 3D (en móvil va PRIMERO) ---------- */}
-      <div
-        className={`order-1 [perspective:1400px] lg:col-span-7 ${invert ? "lg:order-1" : "lg:order-2"}`}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-      >
-        <div
-          ref={cardRef}
-          style={style3d}
-          className={`relative aspect-4/3 w-full will-change-transform [transform-style:preserve-3d] sm:aspect-3/2 lg:aspect-auto lg:h-full lg:min-h-[460px] ${
-            tilt.active ? "" : "lg:animate-float"
-          }`}
-        >
-          {/* Sombra proyectada */}
-          <div
-            aria-hidden
-            className="absolute inset-x-8 -bottom-6 h-12 rounded-[100%] bg-stone-900/20 blur-2xl"
-            style={{ transform: "translateZ(-80px)" }}
-          />
-
+      {/* ---------- Imagen (en móvil va PRIMERO) ---------- */}
+      <div className={`order-1 lg:col-span-7 ${invert ? "lg:order-1" : "lg:order-2"}`}>
+        <div className="relative aspect-4/3 w-full sm:aspect-3/2 lg:aspect-auto lg:h-full lg:min-h-[460px]">
           {/* Imagen principal */}
           <div className="absolute inset-0 overflow-hidden rounded-3xl bg-stone-200 shadow-lg ring-1 ring-stone-900/5">
             <Img
@@ -93,24 +43,13 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
               src={casa.imagenes[foto]}
               alt={casa.nombre}
               loading={index === 0 ? "eager" : "lazy"}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
             />
             <div className="absolute inset-0 bg-linear-to-t from-stone-900/60 via-transparent to-transparent" />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 transition-opacity duration-500"
-              style={{
-                opacity: tilt.active ? 1 : 0,
-                background: `radial-gradient(600px circle at ${tilt.gx}% ${tilt.gy}%, rgb(255 255 255 / 0.18), transparent 45%)`,
-              }}
-            />
           </div>
 
           {/* Chips */}
-          <div
-            className="absolute left-3 top-3 flex flex-wrap gap-2 sm:left-5 sm:top-5"
-            style={{ transform: "translateZ(60px)" }}
-          >
+          <div className="absolute left-3 top-3 flex flex-wrap gap-2 sm:left-5 sm:top-5">
             <span className="rounded-full bg-stone-900/70 px-3 py-1.5 text-[11px] font-medium text-white shadow-sm backdrop-blur">
               {casa.ciudad}
             </span>
@@ -122,10 +61,7 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
           </div>
 
           {/* Precio */}
-          <div
-            className="absolute bottom-3 left-3 rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur sm:bottom-5 sm:left-5 sm:px-4 sm:py-3"
-            style={{ transform: "translateZ(90px)" }}
-          >
+          <div className="absolute bottom-3 left-3 rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur sm:bottom-5 sm:left-5 sm:px-4 sm:py-3">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-500">Precio</p>
             <p className="font-display text-xl font-semibold leading-none text-stone-900 sm:text-2xl">
               {mxn(casa.precio)}
@@ -133,10 +69,7 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
           </div>
 
           {/* Miniaturas */}
-          <div
-            className="absolute bottom-3 right-3 flex gap-1.5 sm:bottom-5 sm:right-5"
-            style={{ transform: "translateZ(70px)" }}
-          >
+          <div className="absolute bottom-3 right-3 flex gap-1.5 sm:bottom-5 sm:right-5">
             {casa.imagenes.slice(0, 4).map((src, i) => (
               <button
                 key={src}
@@ -170,7 +103,8 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
           </h3>
 
           <p className="mt-3 flex items-center gap-1.5 text-sm text-stone-500">
-            <IconPin className="h-4 w-4 shrink-0" /> {casa.colonia}, {casa.ciudad}{casa.estado !== casa.ciudad ? `, ${casa.estado}` : ""}
+            <IconPin className="h-4 w-4 shrink-0" /> {casa.colonia}, {casa.ciudad}
+            {casa.estado !== casa.ciudad ? `, ${casa.estado}` : ""}
           </p>
 
           <ul className="mt-6 grid grid-cols-2 gap-2.5 sm:gap-3">
@@ -204,7 +138,7 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
             </button>
 
             <button
-              onClick={meInteresa}
+              onClick={() => setDetalle(true)}
               className="group inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-800 shadow-sm transition-all hover:bg-stone-100"
             >
               Me interesa
@@ -262,20 +196,21 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
                   >
                     <IconWhatsApp className="h-4 w-4" /> WhatsApp
                   </a>
-                  <a
-                    href={mapsUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    onClick={() => setDetalle(true)}
                     className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-800 shadow-sm transition-all hover:bg-stone-100"
                   >
-                    <IconPin className="h-4 w-4" /> Ver en mapa
-                  </a>
+                    Ver galería y mapa
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal con el detalle completo (galería, mapa, amenidades, contacto) */}
+      {detalle && <CasaDetalleModal casa={casa} onClose={() => setDetalle(false)} />}
     </article>
   );
 }

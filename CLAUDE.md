@@ -13,10 +13,10 @@ Sitio de **una sola página** para que **una persona (propietario, sin marca ni 
 |---|---|---|
 | `#inicio` | `Hero.tsx` | Hero cinematográfico: slideshow de las 4 casas, parallax con mouse, botones → `#propiedades` / `#contacto` |
 | `#propiedades` | `FeaturedProperties.tsx` | Casas **agrupadas por ciudad** (`#ciudad-puebla`, `#ciudad-puerto-escondido`); una `PropertyCard` por casa (id = slug) |
-| — | `Benefits.tsx` | 4 tarjetas de beneficios (voz de propietario, "trato directo") |
+| — | `Benefits.tsx` | Franja compacta: un bloque `mist` con 4 beneficios en fila (voz de propietario) |
 | `#contacto` | `Contacto.tsx` | Datos de contacto + `ContactForm` integrado |
 
-Navbar (`Navbar.tsx`): links Inicio / Propiedades / Contacto con scroll suave + scroll-spy; lista en `src/lib/secciones.ts` (`SECCIONES`, `irASeccion`). Footer lista casas por ciudad (anclas a `#slug`).
+Navbar (`Navbar.tsx`): escritorio = píldora blanca centrada con recorte cóncavo (radio 24px igual al `rounded-b-3xl`), links EN MAYÚSCULAS con scroll suave + scroll-spy; **móvil = solo botón hamburguesa flotante** (círculo blanco arriba-derecha) con desplegable. Lista de secciones en `src/lib/secciones.ts` (`SECCIONES`, `irASeccion`). Footer lista casas por ciudad (anclas a `#slug`).
 
 ## Estructura
 ```
@@ -32,7 +32,8 @@ src/
 │  ├─ Navbar.tsx        Fija, píldora blanca centrada; menú móvil; scroll-spy
 │  ├─ Hero.tsx
 │  ├─ FeaturedProperties.tsx  Sección #propiedades agrupada por ciudad
-│  ├─ PropertyCard.tsx  Tarjeta por casa: imagen 3D (tilt, chips ciudad/etiqueta, precio, miniaturas) + panel crema con specs, "Ver info" (detalles, amenidades, WhatsApp, Ver en mapa → Google Maps) y "Me interesa" (dispara EVENTO_ELEGIR_CASA y baja a #contacto). **Móvil: imagen primero, texto después**; escritorio alterna lado por índice
+│  ├─ PropertyCard.tsx  Tarjeta por casa: imagen plana (SIN efecto 3D; hover zoom suave, chips, precio, miniaturas) + panel crema con specs, "Ver info" (panel desplegable) y **"Me interesa" → abre CasaDetalleModal**. **Móvil: imagen primero, texto después**; escritorio alterna lado por índice
+│  ├─ CasaDetalleModal.tsx  Detalle completo en modal fullscreen: galería con flechas, specs, descripción, amenidades, mapa (Google embed), WhatsApp y "Agendar visita" (cierra, dispara EVENTO_ELEGIR_CASA y baja a #contacto). Bloquea scroll del body, cierra con Esc/backdrop
 │  ├─ Benefits.tsx
 │  ├─ Contacto.tsx      Sección #contacto (datos + form)
 │  ├─ ContactForm.tsx   Form (no envía a backend; console.log + estado "enviado"). Escucha EVENTO_ELEGIR_CASA para preseleccionar casa
