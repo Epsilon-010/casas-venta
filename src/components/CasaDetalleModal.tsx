@@ -24,12 +24,28 @@ import {
  */
 export default function CasaDetalleModal({ casa, onClose }: { casa: Casa; onClose: () => void }) {
   const [idx, setIdx] = useState(0);
+  // Estado del iframe del mapa: si Google tarda o no responde, mostramos un fallback
+  const [mapaEstado, setMapaEstado] = useState<"cargando" | "listo" | "error">("cargando");
+  const [mapaIntento, setMapaIntento] = useState(0);
 
   const total = casa.imagenes.length;
   const prev = () => setIdx((i) => (i - 1 + total) % total);
   const next = () => setIdx((i) => (i + 1) % total);
   const msgWa = `Hola, me interesa ${casa.nombre} en ${casa.colonia}, ${casa.ciudad}. ¿Podemos agendar una visita?`;
-  const mapSrc = `https://www.google.com/maps?q=${casa.mapa.lat},${casa.mapa.lng}&z=15&output=embed`;
+  const mapSrc = `https://maps.google.com/maps?q=${casa.mapa.lat},${casa.mapa.lng}&z=15&hl=es&output=embed`;
+  const mapaUrl = `https://www.google.com/maps/search/?api=1&query=${casa.mapa.lat},${casa.mapa.lng}`;
+
+  // Si el mapa no termina de cargar en 8 s, lo damos por fallido
+  useEffect(() => {
+    if (mapaEstado !== "cargando") return;
+    const t = setTimeout(() => setMapaEstado("error"), 8000);
+    return () => clearTimeout(t);
+  }, [mapaEstado, mapaIntento]);
+
+  const reintentarMapa = () => {
+    setMapaEstado("cargando");
+    setMapaIntento((n) => n + 1);
+  };
 
   // Bloquea el scroll del fondo y cierra con Escape
   useEffect(() => {
@@ -185,15 +201,47 @@ export default function CasaDetalleModal({ casa, onClose }: { casa: Casa; onClos
           <div className="mt-10">
             <h3 className="font-display text-2xl font-medium sm:text-3xl">Ubicación</h3>
             <p className="mt-2 text-sm text-ink-soft">{casa.colonia}, {casa.ciudad}{casa.estado !== casa.ciudad ? `, ${casa.estado}` : ""}</p>
-            <div className="mt-4 overflow-hidden rounded-3xl border border-stone-200">
-              <iframe
-                title={`Mapa ${casa.nombre}`}
-                src={mapSrc}
-                className="aspect-16/9 w-full sm:aspect-21/9"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+            <div className="relative mt-4 overflow-hidden rounded-3xl border border-stone-200">
+              {mapaEstado === "error" ? (
+                <div className="grid aspect-16/9 w-full place-items-center bg-mist p-6 sm:aspect-21/9">
+                  <div className="text-center">
+                    <p className="text-sm text-ink-soft">El mapa tardó demasiado en responder.</p>
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                      <button onClick={reintentarMapa} className="btn-ghost">
+                        Reintentar
+                      </button>
+                      <a href={mapaUrl} target="_blank" rel="noreferrer" className="btn-primary">
+                        Abrir en Google Maps <IconArrow className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <iframe
+                    key={mapaIntento}
+                    title={`Mapa ${casa.nombre}`}
+                    src={mapSrc}
+                    className="aspect-16/9 w-full sm:aspect-21/9"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    onLoad={() => setMapaEstado("listo")}
+                  />
+                  {mapaEstado === "cargando" && (
+                    <div className="pointer-events-none absolute inset-0 grid animate-pulse place-items-center bg-stone-100 text-sm text-ink-soft">
+                      Cargando mapa…
+                    </div>
+                  )}
+                </>
+              )}
             </div>
+            <a
+              href={mapaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-forest hover:underline"
+            >
+              Ver en Google Maps <IconArrow className="h-3.5 w-3.5" />
+            </a>
           </div>
 
           {/* Contacto */}

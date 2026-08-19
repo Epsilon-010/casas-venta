@@ -25,6 +25,19 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Menú móvil abierto: bloquea el scroll del fondo y cierra con Escape
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   const irA = (id: string) => {
     setOpen(false);
     irASeccion(id);
@@ -90,6 +103,15 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* ---------- Móvil: fondo difuminado al abrir el menú ---------- */}
+      <div
+        aria-hidden="true"
+        onClick={() => setOpen(false)}
+        className={`fixed inset-0 -z-10 bg-ink/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
       {/* ---------- Móvil: solo botón hamburguesa flotante ---------- */}
       <div className="flex justify-end px-4 pt-4 md:hidden">
         <button
@@ -103,32 +125,40 @@ export default function Navbar() {
       </div>
 
       {/* Desplegable móvil */}
-      {open && (
-        <div className="mx-4 mt-2 rounded-3xl border border-stone-200/50 bg-white/95 p-3 shadow-card backdrop-blur-md md:hidden">
-          <div className="flex flex-col gap-1">
-            {SECCIONES.map((s) => (
-              <a
-                key={s.id}
-                href={`#${s.id}`}
-                onClick={(e) => { e.preventDefault(); irA(s.id); }}
-                className={`rounded-2xl px-4 py-3 text-sm font-semibold uppercase tracking-wider ${
-                  activa === s.id ? "bg-stone-900 text-white" : "text-stone-900 hover:bg-stone-100"
-                }`}
-              >
-                {s.label}
-              </a>
-            ))}
+      <div
+        className={`mx-4 mt-2 origin-top-right rounded-3xl bg-white p-3 shadow-2xl ring-1 ring-stone-200/60 transition-all duration-300 ease-out md:hidden ${
+          open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-3 scale-95 opacity-0"
+        }`}
+      >
+        <div className="flex flex-col gap-1">
+          {SECCIONES.map((s, i) => (
             <a
-              href={waLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-3 text-sm font-semibold uppercase tracking-wider text-white"
+              key={s.id}
+              href={`#${s.id}`}
+              onClick={(e) => { e.preventDefault(); irA(s.id); }}
+              tabIndex={open ? 0 : -1}
+              style={{ transitionDelay: open ? `${60 + i * 40}ms` : "0ms" }}
+              className={`rounded-2xl px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all duration-300 ${
+                open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+              } ${activa === s.id ? "bg-stone-900 text-white" : "text-stone-900 hover:bg-stone-100"}`}
             >
-              <IconWhatsApp className="h-4 w-4" /> WhatsApp
+              {s.label}
             </a>
-          </div>
+          ))}
+          <a
+            href={waLink()}
+            target="_blank"
+            rel="noreferrer"
+            tabIndex={open ? 0 : -1}
+            style={{ transitionDelay: open ? `${60 + SECCIONES.length * 40}ms` : "0ms" }}
+            className={`mt-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-3 text-sm font-semibold uppercase tracking-wider text-white transition-all duration-300 ${
+              open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+            }`}
+          >
+            <IconWhatsApp className="h-4 w-4" /> WhatsApp
+          </a>
         </div>
-      )}
+      </div>
     </header>
   );
 }
