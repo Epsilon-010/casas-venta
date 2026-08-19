@@ -1,70 +1,60 @@
 # Casas Promoción — Memoria del proyecto
 
-Prototipo web para vender **4 casas** (3 en Puerto Vallarta, 1 en Puebla) con estética premium/blanca.
-Marca placeholder: **Altavista Residencias**.
+Sitio de **una sola página** para que **una persona (propietario, sin marca ni empresa)** promocione **4 casas en venta**: 3 en **Puebla** y 1 en **Puerto Escondido (Oaxaca)**. Estética premium/blanca.
 
 ## Stack
-- Vite 8 + React 19 + TypeScript · Tailwind CSS v4 (`@tailwindcss/vite`, sin `tailwind.config`) · react-router-dom 7
+- Vite 8 + React 19 + TypeScript · Tailwind CSS v4 (`@tailwindcss/vite`, sin `tailwind.config`)
+- `react-router-dom` sigue en `package.json` pero **ya no se usa** (no hay rutas; navegación por anclas)
 - Fuentes: Inter (texto) + Cormorant Garamond (display) vía Google Fonts (`index.html`)
 - Scripts: `npm run dev` · `npm run build` (tsc + vite) · `npm run lint` · `npm run preview`
 
-## Rutas (`src/App.tsx`)
-| Ruta | Página | Qué es |
+## Secciones (una página, `src/pages/Home.tsx`)
+| id | Componente | Qué es |
 |---|---|---|
-| `/` | `pages/Home.tsx` | Landing: Hero → FeaturedProperties → Cities → Benefits → Testimonials → CTA |
-| `/casas` | `pages/Casas.tsx` | Sin filtros ni categorías: `CasaExplorer` (hero inmersivo, casa aleatoria, cambiar entre las 4) + una sección `CasaShowcase` por casa + CTA |
-| `/casas/:slug` | `pages/CasaDetalle.tsx` | Galería, specs, descripción, amenidades, mapa (Google embed), sidebar con WhatsApp + form, similares |
-| `/nosotros` | `pages/Nosotros.tsx` | Historia de la marca (texto placeholder) + Benefits + CTA |
-| `/contacto` | `pages/Contacto.tsx` | Formulario + datos de contacto |
-| `*` | `pages/NotFound.tsx` | 404 |
+| `#inicio` | `Hero.tsx` | Hero cinematográfico: slideshow de las 4 casas, parallax con mouse, botones → `#propiedades` / `#contacto` |
+| `#propiedades` | `FeaturedProperties.tsx` | Casas **agrupadas por ciudad** (`#ciudad-puebla`, `#ciudad-puerto-escondido`); una `PropertyCard` por casa (id = slug) |
+| — | `Benefits.tsx` | 4 tarjetas de beneficios (voz de propietario, "trato directo") |
+| `#contacto` | `Contacto.tsx` | Datos de contacto + `ContactForm` integrado |
+
+Navbar (`Navbar.tsx`): links Inicio / Propiedades / Contacto con scroll suave + scroll-spy; lista en `src/lib/secciones.ts` (`SECCIONES`, `irASeccion`). Footer lista casas por ciudad (anclas a `#slug`).
 
 ## Estructura
 ```
 src/
-├─ App.tsx              Router + Layout (Navbar, Footer, ScrollToTop, WhatsAppButton global)
+├─ App.tsx              Navbar + <Home/> + Footer + WhatsAppButton (sin router)
 ├─ main.tsx             Entry
-├─ index.css            @theme tokens (colores, fuentes, sombras) + utilidades: container-x, glass, eyebrow, btn-primary, btn-ghost, btn-light, animate-fade-up
-├─ data/casas.ts        ★ ÚNICA fuente de datos de las 4 casas (tipo Casa, ciudades, getCasa). Todo placeholder.
-├─ lib/format.ts        mxn(), mxnShort(), CONTACTO (tel/WhatsApp/email placeholder), waLink()
+├─ index.css            @theme tokens + utilidades: container-x, glass, eyebrow, btn-primary, btn-ghost, btn-light, animate-float…
+├─ data/casas.ts        ★ ÚNICA fuente de datos. Tipo Casa, Ciudad = "Puebla" | "Puerto Escondido", `casas`, `ciudades`, `casasPorCiudad`, getCasa
+├─ lib/format.ts        mxn(), mxnShort(), CONTACTO (nombre/tel/WhatsApp/email/horario placeholder), waLink()
+├─ lib/secciones.ts     SECCIONES (ids del nav), EVENTO_ELEGIR_CASA, irASeccion()
+├─ pages/Home.tsx       Hero → FeaturedProperties → Benefits → Contacto
 ├─ components/
-│  ├─ Navbar.tsx        Fija, glass; transparente sobre el hero de Home, blanca al hacer scroll; menú móvil
-│  ├─ Footer.tsx        Fondo ink; lista casas desde data
-│  ├─ Logo.tsx          Isotipo + wordmark (prop light)
-│  ├─ Icons.tsx         SVGs inline (Bed, Bath, Car, Area, Pin, Arrow, Check, WhatsApp, Menu, X, Leaf, Shield, Key, Star, Chevrons)
-│  ├─ Img.tsx           <img> con fallback a /placeholder.svg si la URL falla
-│  ├─ PropertyCard.tsx  Card de casa (imagen overlay, etiqueta, ciudad, precio, specs). size "md"|"lg"
-│  ├─ CasaShowcase.tsx  Sección full-screen por casa: tarjeta 3D CSS (tilt con mouse, capas translateZ, brillo, animate-float), miniaturas, botón "Ver info" que despliega panel con specs/amenidades/WhatsApp. Layout alternado por índice
-│  ├─ SectionHeader.tsx Eyebrow + título display + texto + acción
-│  ├─ Hero.tsx          Hero cinematográfico: slideshow de las 4 casas (crossfade + Ken Burns) o video (const HERO_VIDEO), parallax 3D con mouse, haz de luz, indicador de casa en pantalla
-│  ├─ CasaExplorer.tsx  Hero de /casas: casa aleatoria al entrar, fondo crossfade, tarjeta 3D, selector de las 4 casas, flechas/teclado, autoplay
-│  ├─ FeaturedProperties.tsx  Grid 2 grandes (destacado:true) + 2 medianas
-│  ├─ Cities.tsx        Bloques Puerto Vallarta / Puebla → link a /casas?ciudad=
-│  ├─ Benefits.tsx      4 tarjetas de beneficios
-│  ├─ Testimonials.tsx  Fondo verde bosque, 3 testimonios placeholder (avatars pravatar.cc)
-│  ├─ CTA.tsx           Bloque final con imagen + WhatsApp + link a /contacto
-│  ├─ ContactForm.tsx   Form (no envía a backend; console.log + estado "enviado"). Prop casaSlug preselecciona
-│  ├─ WhatsAppButton.tsx Botón flotante (prop mensaje)
-│  └─ ScrollToTop.tsx
+│  ├─ Navbar.tsx        Fija, píldora blanca centrada; menú móvil; scroll-spy
+│  ├─ Hero.tsx
+│  ├─ FeaturedProperties.tsx  Sección #propiedades agrupada por ciudad
+│  ├─ PropertyCard.tsx  Tarjeta por casa: imagen 3D (tilt, chips ciudad/etiqueta, precio, miniaturas) + panel crema con specs, "Ver info" (detalles, amenidades, WhatsApp, Ver en mapa → Google Maps) y "Me interesa" (dispara EVENTO_ELEGIR_CASA y baja a #contacto). **Móvil: imagen primero, texto después**; escritorio alterna lado por índice
+│  ├─ Benefits.tsx
+│  ├─ Contacto.tsx      Sección #contacto (datos + form)
+│  ├─ ContactForm.tsx   Form (no envía a backend; console.log + estado "enviado"). Escucha EVENTO_ELEGIR_CASA para preseleccionar casa
+│  ├─ Footer.tsx        Fondo oscuro; casas por ciudad, navegación por anclas, correo
+│  ├─ SectionHeader.tsx, Img.tsx (fallback /placeholder.svg), Icons.tsx, WhatsAppButton.tsx
 public/
 ├─ favicon.svg
-└─ placeholder.svg      Fallback de imágenes
+└─ placeholder.svg
 ```
 
 ## Diseño (tokens en `src/index.css` → `@theme`)
-- `ink` #14161a (texto/negro), `ink-soft`, `mist` #f6f5f2 (fondo cálido), `stone-50..300`, `sand` #c8a97e (acento dorado), `forest` #1f3d34 (verde profundo)
-- Radios grandes (`rounded-3xl/4xl`), botones pill, tarjetas blancas con borde `stone-200`, sombras `shadow-soft/card`
+- `ink` #14161a, `ink-soft`, `mist` #f6f5f2, `stone-50..300`, `sand` #c8a97e (dorado), `forest` #1f3d34
+- Radios grandes (`rounded-3xl/4xl`), botones pill, tarjetas blancas borde `stone-200`, sombras `shadow-soft/card`
 - Títulos: `font-display` + palabra en `italic text-sand(-dark)`
-- Tailwind v4: `!` va al final de la clase (`text-white/60!`), gradientes `bg-linear-to-*`, aspect `aspect-4/3`
+- Tailwind v4: `!` al final de la clase (`text-white/60!`), gradientes `bg-linear-to-*`, aspect `aspect-4/3`
 
-## Datos placeholder que hay que reemplazar (cliente)
-- `data/casas.ts`: nombres, direcciones, precios, m², amenidades, coordenadas `mapa`, **imágenes** (URLs de Unsplash; poner las reales en `public/` o `src/assets/`)
-- `lib/format.ts` → `CONTACTO` (marca, teléfono, WhatsApp, email, horario)
-- `Testimonials.tsx` (testimonios y avatares), `Nosotros.tsx` (texto/cifras), `Cities.tsx` (imágenes de ciudad)
-- Nota: "Puerto" se asumió como **Puerto Vallarta**; si es otro puerto, cambiar `Ciudad` en `data/casas.ts` y textos en Hero/Cities/Footer.
+## Datos placeholder que hay que reemplazar
+- `data/casas.ts`: nombres, direcciones, precios, m², amenidades, coordenadas `mapa`, **imágenes** (URLs de Unsplash; poner las reales en `public/`)
+- `lib/format.ts` → `CONTACTO` (teléfono, WhatsApp, email, horario)
+- `Hero.tsx` (eslogan), `Benefits.tsx` (textos)
 
 ## Pendientes / ideas
 - Conectar `ContactForm` a un backend (Formspree, EmailJS, API)
-- Showcase 3D "real": si el cliente entrega renders 360°/modelos .glb, sustituir la tarjeta CSS de `CasaShowcase` por `<model-viewer>` o Three.js (react-three-fiber)
-- Reemplazar Google Maps embed por Maps API con clave si se quiere estilo custom
-- SEO por página (títulos/OG) — p.ej. react-helmet o `document.title` en cada page
-- Deploy (Vercel/Netlify): SPA → agregar rewrite a `/index.html`
+- Quitar `react-router-dom` de `package.json` si no se vuelve a usar
+- Deploy (Vercel/Netlify): página única, no requiere rewrites

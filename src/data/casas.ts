@@ -2,7 +2,7 @@
  * DATOS DE LAS PROPIEDADES
  */
 
-export type Ciudad = "Puerto Vallarta" | "Puebla" | "Puerto Escondido";
+export type Ciudad = "Puebla" | "Puerto Escondido";
 
 export interface Casa {
   slug: string;
@@ -129,6 +129,12 @@ export const casas: Casa[] = [
   },
 ];
 
-export const ciudades: Ciudad[] = ["Puerto Vallarta", "Puebla", "Puerto Escondido"];
+export const ciudades: Ciudad[] = ["Puebla", "Puerto Escondido"];
+
+/** Casas agrupadas por ciudad (en el orden de `ciudades`) */
+export const casasPorCiudad = ciudades.map((ciudad) => ({
+  ciudad,
+  casas: casas.filter((c) => c.ciudad === ciudad),
+}));
 
 export const getCasa = (slug: string) => casas.find((c) => c.slug === slug);

@@ -3,7 +3,7 @@ import SectionHeader from "./SectionHeader";
 
 const items = [
   { icon: IconKey, t: "Entrega inmediata", d: "Escrituras listas. Firmas, recibes llaves y te mudas — sin esperas de obra." },
-  { icon: IconShield, t: "Certeza jurídica", d: "Propiedades libres de gravamen, con notaría aliada y acompañamiento en todo el proceso." },
+  { icon: IconShield, t: "Certeza jurídica", d: "Propiedades libres de gravamen, con escrituras en regla y acompañamiento notarial en todo el proceso." },
   { icon: IconLeaf, t: "Diseño sustentable", d: "Paneles solares, captación pluvial y materiales de baja huella en cada residencia." },
   { icon: IconStar, t: "Acabados premium", d: "Cocinas italianas, cancelería de aluminio negro, pisos de mármol y madera natural." },
 ];
@@ -11,11 +11,11 @@ const items = [
 /** Beneficios en 4 tarjetas blancas sobre fondo blanco con borde suave. */
 export default function Benefits() {
   return (
-    <section className="container-x py-24">
+    <section className="container-x py-16 sm:py-24">
       <SectionHeader
-        eyebrow="Por qué somos buena opcion"
+        eyebrow="Por qué comprar directo"
         title={<>Comprar una casa debería ser <span className="italic text-sand-dark">así de fácil.</span></>}
-        text="Nos encargamos de todo: desde el recorrido hasta la escritura. Tú solo eliges dónde poner el sofá."
+        text="Trato directo con el propietario: sin comisiones de inmobiliaria, respuestas rápidas y acompañamiento desde el recorrido hasta la escritura."
       />
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {items.map(({ icon: I, t, d }) => (

@@ -1,17 +1,16 @@
 import Hero from "../components/Hero";
 import FeaturedProperties from "../components/FeaturedProperties";
 import Benefits from "../components/Benefits";
-import CTA from "../components/CTA";
+import Contacto from "../components/Contacto";
 
-/** Ruta "/" — landing principal. Orden de secciones editable aquí. */
+/** Única página del sitio. Orden de secciones editable aquí. */
 export default function Home() {
   return (
     <>
       <Hero />
       <FeaturedProperties />
       <Benefits />
-      
-      <CTA />
+      <Contacto />
     </>
   );
 }

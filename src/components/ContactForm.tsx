@@ -1,16 +1,25 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { casas } from "../data/casas";
 import { IconCheck, IconArrow } from "./Icons";
+import { EVENTO_ELEGIR_CASA } from "../lib/secciones";
 
 /**
  * Formulario de contacto. Por ahora NO envía a ningún backend: muestra
  * confirmación local. Conectar después con Formspree / EmailJS / API propia
  * en `onSubmit`.
  *
- * `casaSlug` preselecciona la propiedad (se usa desde la página de detalle).
+ * `casaSlug` preselecciona la propiedad; además escucha el evento global
+ * `elegir-casa` (botón "Me interesa" de cada tarjeta) para cambiar la selección.
  */
 export default function ContactForm({ casaSlug, compact = false }: { casaSlug?: string; compact?: boolean }) {
   const [enviado, setEnviado] = useState(false);
+  const [casa, setCasa] = useState(casaSlug ?? "");
+
+  useEffect(() => {
+    const onElegir = (e: Event) => setCasa((e as CustomEvent<string>).detail);
+    window.addEventListener(EVENTO_ELEGIR_CASA, onElegir);
+    return () => window.removeEventListener(EVENTO_ELEGIR_CASA, onElegir);
+  }, []);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +33,7 @@ export default function ContactForm({ casaSlug, compact = false }: { casaSlug?: 
       <div className="rounded-3xl border border-stone-200 bg-mist p-8 text-center">
         <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-forest text-white"><IconCheck /></span>
         <h3 className="mt-4 font-display text-2xl font-semibold">¡Gracias! Te contactamos pronto.</h3>
-        <p className="mt-2 text-sm text-ink-soft">Un asesor te escribirá en menos de 24 h para agendar tu recorrido.</p>
+        <p className="mt-2 text-sm text-ink-soft">Te escribo personalmente en menos de 24 h para agendar tu recorrido.</p>
       </div>
     );
   }
@@ -48,7 +57,7 @@ export default function ContactForm({ casaSlug, compact = false }: { casaSlug?: 
       </div>
       <div className={compact ? "" : "sm:col-span-2"}>
         <label className={label} htmlFor="casa">Propiedad de interés</label>
-        <select id="casa" name="casa" defaultValue={casaSlug ?? ""} className={input}>
+        <select id="casa" name="casa" value={casa} onChange={(e) => setCasa(e.target.value)} className={input}>
           <option value="">Cualquiera / aún no sé</option>
           {casas.map((c) => <option key={c.slug} value={c.slug}>{c.nombre} · {c.ciudad}</option>)}
         </select>
@@ -59,7 +68,7 @@ export default function ContactForm({ casaSlug, compact = false }: { casaSlug?: 
       </div>
       <div className={compact ? "" : "sm:col-span-2"}>
         <button type="submit" className="btn-primary w-full">Enviar solicitud <IconArrow className="h-4 w-4" /></button>
-        <p className="mt-3 text-center text-[11px] text-ink-soft">Al enviar aceptas nuestro aviso de privacidad. Nunca compartimos tus datos.</p>
+        <p className="mt-3 text-center text-[11px] text-ink-soft">Tus datos solo se usan para contactarte sobre estas casas. Nunca se comparten.</p>
       </div>
     </form>
   );

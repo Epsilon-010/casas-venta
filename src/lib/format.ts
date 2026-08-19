@@ -10,15 +10,14 @@ export const mxn = (n: number) =>
 export const mxnShort = (n: number) =>
   `$${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)} M`;
 
-/** Datos de contacto (placeholder) usados en Navbar, Footer, WhatsApp, Contacto */
+/** Datos de contacto del propietario (placeholder — reemplazar con los reales) */
 export const CONTACTO = {
-  marca: "Altavista",
-  marcaSub: "Residencias",
+  nombre: "Propietario",
   telefono: "+52 222 000 0000",
   whatsapp: "522220000000",
-  email: "ventas@altavista.mx",
+  email: "contacto@correo.com",
   horario: "Lun – Sáb · 9:00 – 19:00",
 };
 
-export const waLink = (msg = "Hola, me interesa una propiedad de Altavista Residencias.") =>
+export const waLink = (msg = "Hola, vi tus casas en venta y me gustaría más información.") =>
   `https://wa.me/${CONTACTO.whatsapp}?text=${encodeURIComponent(msg)}`;

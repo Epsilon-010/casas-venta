@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Link } from "react-router-dom";
 import Img from "./Img";
 import { casas } from "../data/casas";
 import { IconArrow, IconPin } from "./Icons";
@@ -41,6 +40,7 @@ export default function Hero() {
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={() => setM({ x: 0, y: 0 })}
+      id="inicio"
       className="relative isolate min-h-svh w-full overflow-hidden bg-neutral-950 text-white flex flex-col justify-between [perspective:1200px]"
     >
       {/* ---------- Fondo Slideshow ---------- */}
@@ -74,31 +74,31 @@ export default function Hero() {
         
         {/* Bloque de Texto con Eslogan más Grande */}
         <div className="my-auto max-w-2xl lg:max-w-3xl py-4" style={layer(12)}>
-          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-white leading-[1.04] [text-shadow:_0_4px_24px_rgb(0_0_0_/_80%)]">
+          <h1 className="font-display text-[2.6rem] sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-white leading-[1.04] [text-shadow:_0_4px_24px_rgb(0_0_0_/_80%)]">
             Espacios que <br />
             inspiran tu <br />
             <span className="italic text-[#c8a97e]">forma de vivir.</span>
           </h1>
 
           <p className="mt-5 sm:mt-6 max-w-lg text-base sm:text-lg leading-relaxed text-white/90 font-light [text-shadow:_0_2px_10px_rgb(0_0_0_/_80%)]">
-            Residencias exclusivas listas para habitar. Trato directo con el propietario, sin comisiones ni intermediarios.
+            Cuatro casas en venta: tres en Puebla y una en Puerto Escondido. Trato directo con el propietario, sin comisiones ni intermediarios.
           </p>
 
           {/* Botones Glassmorphism / Transparentes */}
           <div className="mt-8 flex flex-wrap items-center gap-3.5">
-            <Link
-              to="/casas"
+            <a
+              href="#propiedades"
               className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-white/40 bg-white/15 px-7 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
             >
-              Explorar Propiedades <IconArrow className="h-4 w-4" />
-            </Link>
+              Ver propiedades <IconArrow className="h-4 w-4" />
+            </a>
 
-            <Link
-              to="/contacto"
+            <a
+              href="#contacto"
               className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
             >
-              Agendar Visita
-            </Link>
+              Agendar visita
+            </a>
           </div>
         </div>
 
