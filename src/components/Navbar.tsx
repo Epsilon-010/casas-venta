@@ -43,65 +43,51 @@ export default function Navbar() {
     irASeccion(id);
   };
 
-  const fillColor = scrolled ? "fill-white/95" : "fill-white";
-
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      {/* ---------- Escritorio: píldora blanca centrada ---------- */}
-      <div className="hidden justify-center md:flex">
-        <div className="relative w-full max-w-3xl">
-          <nav
-            className={`relative flex items-center justify-between rounded-b-3xl px-8 py-3 transition-all duration-300 ${
-              scrolled
-                ? "border-x border-b border-stone-200/50 bg-white/95 text-stone-900 shadow-lg backdrop-blur-md"
-                : "bg-white text-stone-900 shadow-xl"
-            }`}
-          >
-            {/* Recorte cóncavo (radio 24px, igual al rounded-b-3xl para una línea continua) */}
-            <div className="pointer-events-none absolute -left-6 top-0 h-6 w-6">
-              <svg viewBox="0 0 24 24" fill="none" className="h-full w-full">
-                <path d="M0 0H24V24A24 24 0 0 0 0 0Z" className={`${fillColor} transition-colors duration-300`} />
-              </svg>
-            </div>
-            <div className="pointer-events-none absolute -right-6 top-0 h-6 w-6">
-              <svg viewBox="0 0 24 24" fill="none" className="h-full w-full">
-                <path d="M24 0H0V24A24 24 0 0 1 24 0Z" className={`${fillColor} transition-colors duration-300`} />
-              </svg>
-            </div>
+      {/* ---------- Escritorio: barra transparente (velo sutil solo al hacer scroll) ---------- */}
+      <nav
+        className={`relative hidden items-center justify-center px-8 py-4 transition-all duration-300 md:flex lg:px-12 ${
+          scrolled ? "bg-white/70 shadow-sm backdrop-blur-md" : "bg-transparent"
+        }`}
+      >
+        {/* Menú */}
+        <ul className="flex items-center gap-2">
+          {SECCIONES.map((s) => (
+            <li key={s.id}>
+              <a
+                href={`#${s.id}`}
+                onClick={(e) => { e.preventDefault(); irA(s.id); }}
+                aria-current={activa === s.id ? "true" : undefined}
+                className={`block px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-200 ${
+                  activa === s.id
+                    ? `underline decoration-sand decoration-2 underline-offset-8 ${scrolled ? "text-stone-900" : "text-white"}`
+                    : scrolled
+                      ? "text-stone-900/55 hover:text-stone-900"
+                      : "text-white/60 hover:text-white"
+                }`}
+              >
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
 
-            {/* Menú */}
-            <ul className="mx-auto flex items-center gap-1.5">
-              {SECCIONES.map((s) => (
-                <li key={s.id}>
-                  <a
-                    href={`#${s.id}`}
-                    onClick={(e) => { e.preventDefault(); irA(s.id); }}
-                    aria-current={activa === s.id ? "true" : undefined}
-                    className={`block rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
-                      activa === s.id
-                        ? "bg-stone-900 text-white shadow-sm"
-                        : "text-stone-700 hover:bg-stone-100 hover:text-stone-900"
-                    }`}
-                  >
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            {/* WhatsApp */}
-            <a
-              href={waLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white transition-transform hover:bg-stone-800 active:scale-95"
-            >
-              <IconWhatsApp className="h-4 w-4" />
-              <span>WhatsApp</span>
-            </a>
-          </nav>
-        </div>
-      </div>
+        {/* WhatsApp */}
+        <a
+          href={waLink()}
+          target="_blank"
+          rel="noreferrer"
+          className={`absolute right-8 top-1/2 inline-flex -translate-y-1/2 items-center gap-2 rounded-full border px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all active:scale-95 lg:right-12 ${
+            scrolled
+              ? "border-stone-900/25 text-stone-900 hover:bg-stone-900 hover:text-white"
+              : "border-white/40 text-white hover:bg-white hover:text-stone-900"
+          }`}
+        >
+          <IconWhatsApp className="h-4 w-4" />
+          <span>WhatsApp</span>
+        </a>
+      </nav>
 
       {/* ---------- Móvil: fondo difuminado al abrir el menú ---------- */}
       <div
@@ -118,10 +104,12 @@ export default function Navbar() {
           onClick={() => setOpen(!open)}
           aria-label="Menú"
           aria-expanded={open}
-          className={`grid h-12 w-12 place-items-center rounded-full border backdrop-blur-xl transition-all duration-300 active:scale-95 ${
-            open || !scrolled
-              ? "border-white/35 bg-white/15 text-white shadow-lg"
-              : "border-white/60 bg-white/75 text-stone-900 shadow-card"
+          className={`grid h-12 w-12 place-items-center rounded-full border transition-all duration-300 active:scale-95 ${
+            open
+              ? "border-white/35 bg-white/15 text-white shadow-lg backdrop-blur-xl"
+              : scrolled
+                ? "border-white/60 bg-white/75 text-stone-900 shadow-card backdrop-blur-xl"
+                : "border-transparent bg-transparent text-white"
           }`}
         >
           {open ? <IconX className="h-5 w-5" /> : <IconMenu className="h-5 w-5" />}

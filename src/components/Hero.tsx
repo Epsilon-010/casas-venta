@@ -1,26 +1,14 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 import Img from "./Img";
-import { casas } from "../data/casas";
-import { IconArrow, IconPin } from "./Icons";
+import { IconArrow } from "./Icons";
 
-const HERO_IMAGE_PREVIEW =
-  "https://res.cloudinary.com/dkpl0map1/image/upload/v1787156623/ralph-ravi-kayden-mR1CIDduGLc-unsplash_upscayl_2x_upscayl-standard-4x_nzg7fe.webp";
-const HERO_IMAGE_MOBILE =
-  "https://res.cloudinary.com/dkpl0map1/image/upload/v1787185095/c6512eeac9db74ea4c280c2c48717ea3_upscayl_3x_upscayl-standard-4x_u0ars8.webp";
-const SLIDE_MS = 6500;
+/** Casa recortada (sin fondo) — el titular vive entre el fondo crema y la casa */
+const HERO_IMAGE =
+  "https://res.cloudinary.com/dkpl0map1/image/upload/v1787251563/images_7_-Photoroom_upscayl_5x_upscayl-standard-4x_wvqevd.webp";
 
 export default function Hero() {
-  const [i, setI] = useState(0);
   const [m, setM] = useState({ x: 0, y: 0 });
   const ref = useRef<HTMLElement>(null);
-
-  const casa = casas[i] || {};
-
-  // Slideshow
-  useEffect(() => {
-    const t = setTimeout(() => setI((v) => (v + 1) % casas.length), SLIDE_MS);
-    return () => clearTimeout(t);
-  }, [i]);
 
   // Parallax interactivo
   const onMove = (e: MouseEvent<HTMLElement>) => {
@@ -43,109 +31,69 @@ export default function Hero() {
       onMouseMove={onMove}
       onMouseLeave={() => setM({ x: 0, y: 0 })}
       id="inicio"
-      className="relative isolate min-h-svh w-full overflow-hidden bg-neutral-950 text-white flex flex-col justify-between [perspective:1200px]"
+      className="relative isolate min-h-svh w-full overflow-hidden bg-[#101c36] text-white"
     >
-      {/* ---------- Fondo Móvil: imagen estática ---------- */}
-      <div className="absolute inset-0 -z-20 sm:hidden">
+      {/* ---------- Capa 1 · Fondo azul atardecer ---------- */}
+      <div className="absolute inset-0 z-0 bg-linear-to-b from-[#0a1327] via-[#16294d] to-[#2c4a74]" />
+      {/* Resplandor suave en el horizonte, detrás de la casa */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_65%_45%_at_50%_58%,rgba(96,126,178,0.45),transparent_70%)]" />
+
+      {/* ---------- Capa 2 · Titular gigante (detrás de la casa) ---------- */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-[59svh] sm:bottom-[66svh] z-10 flex flex-col items-center px-4"
+        style={layer(14)}
+      >
+        <p className="mb-3 whitespace-nowrap text-[8px] sm:text-[10px] font-semibold tracking-[0.35em] uppercase text-white/55">
+          Puebla &amp; Puerto Escondido
+        </p>
+        <h1 className="font-display text-center uppercase leading-[0.95] tracking-[0.04em] text-[clamp(2rem,11vw,7rem)] font-medium select-none filter-[drop-shadow(0_10px_24px_rgb(0_0_0/0.45))]">
+          <span className="block whitespace-nowrap text-transparent bg-clip-text bg-linear-to-b from-white via-white/90 to-white/45">
+            Espacios que
+          </span>
+          <span className="block italic text-transparent bg-clip-text bg-linear-to-b from-[#a8845a] to-[#c8a97e]/50">
+            Inspiran
+          </span>
+        </h1>
+      </div>
+
+      {/* ---------- Capa 3 · Casa recortada en primer plano ---------- */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[62svh] sm:h-[72svh]"
+        style={layer(-6)}
+      >
         <Img
-          src={HERO_IMAGE_MOBILE}
+          src={HERO_IMAGE}
           alt="Residencia"
           fetchPriority="high"
           loading="eager"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-[50%_20%]"
         />
       </div>
 
-      {/* ---------- Fondo Slideshow (solo escritorio/tablet) ---------- */}
-      <div className="absolute inset-0 -z-20 hidden scale-105 sm:block" style={layer(-15)}>
-        {casas.map((c, k) => (
-          <div
-            key={c.slug || k}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-out ${
-              k === i ? "opacity-100" : "opacity-0"
-            }`}
+      {/* ---------- Capa 3.5 · Velo inferior para legibilidad ---------- */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-64 bg-linear-to-t from-black/50 via-black/20 to-transparent" />
+
+      {/* ---------- Capa 4 · Contenido inferior ---------- */}
+      <div className="absolute inset-x-0 bottom-0 z-30 flex flex-col items-center px-6 pb-24 text-center sm:pb-14">
+        <p className="font-display italic text-xl sm:text-2xl text-white/95 [text-shadow:0_2px_14px_rgb(0_0_0/60%)]">
+          tu forma de vivir.
+        </p>
+
+        <div className="mt-6 grid w-full max-w-md grid-cols-2 gap-3">
+          <a
+            href="#propiedades"
+            className="inline-flex h-11 sm:h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/40 bg-white/15 px-3 sm:px-6 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
           >
-            <Img
-              src={c.imagenes?.[0] || HERO_IMAGE_PREVIEW}
-              alt={c.nombre || "Residencia"}
-              fetchPriority={k === 0 ? "high" : undefined}
-              loading={k === 0 ? "eager" : "lazy"}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
+            Ver propiedades <IconArrow className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          </a>
 
-      {/* ---------- Sombreado Reforzado para Legibilidad ---------- */}
-      {/* Móvil: velo vertical elegante (oscuro abajo para el texto, sutil arriba) */}
-      <div className="absolute inset-0 -z-10 sm:hidden bg-linear-to-b from-black/70 via-black/25 via-55% to-black/50 pointer-events-none" />
-      {/* Escritorio: gradiente lateral denso para oscurecer la zona del texto */}
-      <div className="absolute inset-y-0 left-0 -z-10 hidden sm:block sm:w-3/4 lg:w-3/5 bg-linear-to-r from-black/90 via-black/65 via-60% to-transparent pointer-events-none" />
-      {/* Sombra suave superior/inferior general */}
-      <div className="absolute inset-0 -z-10 hidden sm:block bg-linear-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
-
-      {/* ---------- Contenido Principal ---------- */}
-      <div className="container-x relative z-10 flex flex-1 flex-col justify-between pt-28 max-sm:pt-16 pb-8 sm:pb-10">
-        
-        {/* Bloque de Texto con Eslogan más Grande */}
-        <div className="my-auto max-sm:mt-0 max-sm:mb-auto max-sm:text-center max-w-2xl lg:max-w-3xl py-4 max-sm:py-0" style={layer(12)}>
-          <h1 className="font-display text-[2.4rem] sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-white leading-[1.04] [text-shadow:_0_4px_24px_rgb(0_0_0_/_80%)]">
-            Espacios que <br />
-            inspiran tu <br />
-            <span className="italic text-[#c8a97e]">forma de vivir.</span>
-          </h1>
-
-          <p className="mt-5 sm:mt-6 max-w-lg max-sm:mx-auto text-base sm:text-lg leading-relaxed text-white/90 font-light [text-shadow:_0_2px_10px_rgb(0_0_0_/_80%)]">
-            Casas en venta, ubicadas en Puebla y Puerto Escondido.
-          </p>
-
-          {/* Botones Glassmorphism / Transparentes */}
-          <div className="mt-6 sm:mt-8 flex flex-row flex-wrap items-center gap-2.5 max-sm:justify-center sm:gap-3.5">
-            <a
-              href="#propiedades"
-              className="inline-flex h-9 sm:h-12 items-center justify-center gap-2 sm:gap-2.5 rounded-full border border-white/40 bg-white/15 px-4 sm:px-7 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
-            >
-              Ver propiedades <IconArrow className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </a>
-
-            <a
-              href="#contacto"
-              className="inline-flex h-9 sm:h-12 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 sm:px-7 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
-            >
-              Agendar visita
-            </a>
-          </div>
+          <a
+            href="#contacto"
+            className="inline-flex h-11 sm:h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/30 bg-white/10 px-3 sm:px-6 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
+          >
+            Agendar visita
+          </a>
         </div>
-
-        {/* ---------- Franja Inferior (solo escritorio/tablet, ligada al slideshow) ---------- */}
-        <div style={layer(8)} className="hidden border-t border-white/20 pt-4 sm:flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <IconPin className="h-4 w-4 text-[#c8a97e]" />
-            <span className="text-xs sm:text-sm font-medium text-white drop-shadow">
-              {casa.nombre || "Propiedad"}
-            </span>
-            {casa.ciudad && (
-              <span className="text-xs text-white/70 drop-shadow">
-                · {casa.colonia ? `${casa.colonia}, ` : ""}{casa.ciudad}
-              </span>
-            )}
-          </div>
-
-          {/* Indicadores de Diapositiva */}
-          <div className="flex items-center gap-2">
-            {casas.map((c, k) => (
-              <button
-                key={c.slug || k}
-                onClick={() => setI(k)}
-                aria-label={c.nombre || `Casa ${k + 1}`}
-                className={`h-1.5 transition-all duration-500 rounded-full ${
-                  k === i ? "w-8 bg-[#c8a97e]" : "w-2.5 bg-white/40 hover:bg-white/70"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-
       </div>
     </section>
   );

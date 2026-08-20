@@ -11,7 +11,7 @@ Sitio de **una sola página** para que **una persona (propietario, sin marca ni 
 ## Secciones (una página, `src/pages/Home.tsx`)
 | id | Componente | Qué es |
 |---|---|---|
-| `#inicio` | `Hero.tsx` | Hero cinematográfico: slideshow de las 4 casas, parallax con mouse, botones → `#propiedades` / `#contacto` |
+| `#inicio` | `Hero.tsx` | Hero unificado (móvil = escritorio): imagen estática de Cloudinary, titular gigante serif "TU HOGAR" **detrás de la casa** (duplicado de la imagen con `mask-image` en primer plano), parallax con mouse, botones → `#propiedades` / `#contacto`. Ya no hay slideshow |
 | `#propiedades` | `FeaturedProperties.tsx` | Casas **agrupadas por ciudad** (`#ciudad-puebla`, `#ciudad-puerto-escondido`); una `PropertyCard` por casa (id = slug) |
 | — | `Benefits.tsx` | Franja compacta: un bloque `mist` con 4 beneficios en fila (voz de propietario) |
 | `#contacto` | `Contacto.tsx` | Datos de contacto + `ContactForm` integrado |
