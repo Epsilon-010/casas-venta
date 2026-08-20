@@ -5,6 +5,8 @@ import { IconArrow, IconPin } from "./Icons";
 
 const HERO_IMAGE_PREVIEW =
   "https://res.cloudinary.com/dkpl0map1/image/upload/v1787156623/ralph-ravi-kayden-mR1CIDduGLc-unsplash_upscayl_2x_upscayl-standard-4x_nzg7fe.webp";
+const HERO_IMAGE_MOBILE =
+  "https://res.cloudinary.com/dkpl0map1/image/upload/v1787185095/c6512eeac9db74ea4c280c2c48717ea3_upscayl_3x_upscayl-standard-4x_u0ars8.webp";
 const SLIDE_MS = 6500;
 
 export default function Hero() {
@@ -43,8 +45,19 @@ export default function Hero() {
       id="inicio"
       className="relative isolate min-h-svh w-full overflow-hidden bg-neutral-950 text-white flex flex-col justify-between [perspective:1200px]"
     >
-      {/* ---------- Fondo Slideshow ---------- */}
-      <div className="absolute inset-0 -z-20 scale-105" style={layer(-15)}>
+      {/* ---------- Fondo Móvil: imagen estática ---------- */}
+      <div className="absolute inset-0 -z-20 sm:hidden">
+        <Img
+          src={HERO_IMAGE_MOBILE}
+          alt="Residencia"
+          fetchPriority="high"
+          loading="eager"
+          className="h-full w-full object-cover"
+        />
+      </div>
+
+      {/* ---------- Fondo Slideshow (solo escritorio/tablet) ---------- */}
+      <div className="absolute inset-0 -z-20 hidden scale-105 sm:block" style={layer(-15)}>
         {casas.map((c, k) => (
           <div
             key={c.slug || k}
@@ -64,16 +77,18 @@ export default function Hero() {
       </div>
 
       {/* ---------- Sombreado Reforzado para Legibilidad ---------- */}
-      {/* Gradiente lateral denso para oscurecer la zona del texto */}
-      <div className="absolute inset-y-0 left-0 -z-10 w-full sm:w-3/4 lg:w-3/5 bg-gradient-to-r from-black/90 via-black/65 via-60% to-transparent pointer-events-none" />
+      {/* Móvil: velo vertical elegante (oscuro abajo para el texto, sutil arriba) */}
+      <div className="absolute inset-0 -z-10 sm:hidden bg-linear-to-t from-black/90 via-black/40 via-45% to-black/30 pointer-events-none" />
+      {/* Escritorio: gradiente lateral denso para oscurecer la zona del texto */}
+      <div className="absolute inset-y-0 left-0 -z-10 hidden sm:block sm:w-3/4 lg:w-3/5 bg-linear-to-r from-black/90 via-black/65 via-60% to-transparent pointer-events-none" />
       {/* Sombra suave superior/inferior general */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
+      <div className="absolute inset-0 -z-10 hidden sm:block bg-linear-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
 
       {/* ---------- Contenido Principal ---------- */}
       <div className="container-x relative z-10 flex flex-1 flex-col justify-between pt-28 pb-8 sm:pb-10">
         
         {/* Bloque de Texto con Eslogan más Grande */}
-        <div className="my-auto max-w-2xl lg:max-w-3xl py-4" style={layer(12)}>
+        <div className="my-auto max-sm:mb-6 max-w-2xl lg:max-w-3xl py-4" style={layer(12)}>
           <h1 className="font-display text-[2.6rem] sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-white leading-[1.04] [text-shadow:_0_4px_24px_rgb(0_0_0_/_80%)]">
             Espacios que <br />
             inspiran tu <br />
@@ -85,7 +100,7 @@ export default function Hero() {
           </p>
 
           {/* Botones Glassmorphism / Transparentes */}
-          <div className="mt-8 flex flex-wrap items-center gap-3.5">
+          <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3.5">
             <a
               href="#propiedades"
               className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-white/40 bg-white/15 px-7 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
@@ -102,8 +117,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ---------- Franja Inferior ---------- */}
-        <div style={layer(8)} className="border-t border-white/20 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        {/* ---------- Franja Inferior (solo escritorio/tablet, ligada al slideshow) ---------- */}
+        <div style={layer(8)} className="hidden border-t border-white/20 pt-4 sm:flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <IconPin className="h-4 w-4 text-[#c8a97e]" />
             <span className="text-xs sm:text-sm font-medium text-white drop-shadow">
