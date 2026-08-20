@@ -78,39 +78,39 @@ export default function Hero() {
 
       {/* ---------- Sombreado Reforzado para Legibilidad ---------- */}
       {/* Móvil: velo vertical elegante (oscuro abajo para el texto, sutil arriba) */}
-      <div className="absolute inset-0 -z-10 sm:hidden bg-linear-to-t from-black/90 via-black/40 via-45% to-black/30 pointer-events-none" />
+      <div className="absolute inset-0 -z-10 sm:hidden bg-linear-to-b from-black/70 via-black/25 via-55% to-black/50 pointer-events-none" />
       {/* Escritorio: gradiente lateral denso para oscurecer la zona del texto */}
       <div className="absolute inset-y-0 left-0 -z-10 hidden sm:block sm:w-3/4 lg:w-3/5 bg-linear-to-r from-black/90 via-black/65 via-60% to-transparent pointer-events-none" />
       {/* Sombra suave superior/inferior general */}
       <div className="absolute inset-0 -z-10 hidden sm:block bg-linear-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
 
       {/* ---------- Contenido Principal ---------- */}
-      <div className="container-x relative z-10 flex flex-1 flex-col justify-between pt-28 pb-8 sm:pb-10">
+      <div className="container-x relative z-10 flex flex-1 flex-col justify-between pt-28 max-sm:pt-16 pb-8 sm:pb-10">
         
         {/* Bloque de Texto con Eslogan más Grande */}
-        <div className="my-auto max-sm:mb-6 max-w-2xl lg:max-w-3xl py-4" style={layer(12)}>
-          <h1 className="font-display text-[2.6rem] sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-white leading-[1.04] [text-shadow:_0_4px_24px_rgb(0_0_0_/_80%)]">
+        <div className="my-auto max-sm:mt-0 max-sm:mb-auto max-sm:text-center max-w-2xl lg:max-w-3xl py-4 max-sm:py-0" style={layer(12)}>
+          <h1 className="font-display text-[2.4rem] sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-white leading-[1.04] [text-shadow:_0_4px_24px_rgb(0_0_0_/_80%)]">
             Espacios que <br />
             inspiran tu <br />
             <span className="italic text-[#c8a97e]">forma de vivir.</span>
           </h1>
 
-          <p className="mt-5 sm:mt-6 max-w-lg text-base sm:text-lg leading-relaxed text-white/90 font-light [text-shadow:_0_2px_10px_rgb(0_0_0_/_80%)]">
-            Cuatro casas en venta: tres en Puebla y una en Puerto Escondido. Trato directo con el propietario, sin comisiones ni intermediarios.
+          <p className="mt-5 sm:mt-6 max-w-lg max-sm:mx-auto text-base sm:text-lg leading-relaxed text-white/90 font-light [text-shadow:_0_2px_10px_rgb(0_0_0_/_80%)]">
+            Casas en venta, ubicadas en Puebla y Puerto Escondido.
           </p>
 
           {/* Botones Glassmorphism / Transparentes */}
-          <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3.5">
+          <div className="mt-6 sm:mt-8 flex flex-row flex-wrap items-center gap-2.5 max-sm:justify-center sm:gap-3.5">
             <a
               href="#propiedades"
-              className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-white/40 bg-white/15 px-7 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
+              className="inline-flex h-9 sm:h-12 items-center justify-center gap-2 sm:gap-2.5 rounded-full border border-white/40 bg-white/15 px-4 sm:px-7 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
             >
-              Ver propiedades <IconArrow className="h-4 w-4" />
+              Ver propiedades <IconArrow className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </a>
 
             <a
               href="#contacto"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
+              className="inline-flex h-9 sm:h-12 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 sm:px-7 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
             >
               Agendar visita
             </a>

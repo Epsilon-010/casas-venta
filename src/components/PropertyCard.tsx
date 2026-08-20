@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Casa } from "../data/casas";
-import { mxn, waLink } from "../lib/format";
+import { mxn } from "../lib/format";
+import { EVENTO_ELEGIR_CASA, irASeccion } from "../lib/secciones";
 import CasaDetalleModal from "./CasaDetalleModal";
 import Img from "./Img";
 import {
@@ -9,10 +10,7 @@ import {
   IconBath,
   IconBed,
   IconCar,
-  IconCheck,
   IconPin,
-  IconWhatsApp,
-  IconX,
 } from "./Icons";
 
 interface PropertyCardProps {
@@ -22,11 +20,16 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
-  const [open, setOpen] = useState(false);
   const [detalle, setDetalle] = useState(false);
   const [foto, setFoto] = useState(0);
 
   const invert = index % 2 === 1;
+
+  // Preselecciona la casa en el formulario y baja a la sección de contacto
+  const meInteresa = () => {
+    window.dispatchEvent(new CustomEvent(EVENTO_ELEGIR_CASA, { detail: casa.slug }));
+    irASeccion("contacto");
+  };
 
   return (
     <article
@@ -126,100 +129,26 @@ export default function PropertyCard({ casa, index = 0 }: PropertyCardProps) {
           <p className="mt-5 line-clamp-3 text-sm leading-relaxed text-stone-600">{casa.descripcion}</p>
         </div>
 
-        <div className="mt-6 sm:mt-8">
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setOpen((v) => !v)}
-              className="inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-50 shadow-sm transition-all hover:bg-stone-800"
-              aria-expanded={open}
-            >
-              {open ? "Cerrar info" : "Ver info"}
-              <span className={`transition-transform duration-300 ${open ? "rotate-45" : ""}`}>+</span>
-            </button>
-
-            <button
-              onClick={() => setDetalle(true)}
-              className="group inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-800 shadow-sm transition-all hover:bg-stone-100"
-            >
-              Me interesa
-              <IconArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
-          </div>
-
-          {/* Panel de info desplegable */}
-          <div
-            className={`grid transition-[grid-template-rows,opacity,margin] duration-500 ease-out ${
-              open ? "mt-6 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-            }`}
+        <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+          <button
+            onClick={() => setDetalle(true)}
+            className="group inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-50 shadow-sm transition-all hover:bg-stone-800"
           >
-            <div className="overflow-hidden">
-              <div className="rounded-3xl border border-stone-300 bg-white p-5 shadow-sm sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <h4 className="font-display text-xl font-semibold text-stone-900">Detalles</h4>
-                  <button
-                    onClick={() => setOpen(false)}
-                    aria-label="Cerrar"
-                    className="rounded-full p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-800"
-                  >
-                    <IconX className="h-4 w-4" />
-                  </button>
-                </div>
+            Ver detalle
+            <IconArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </button>
 
-                <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-3">
-                  <Dato k="Terreno" v={`${casa.m2Terreno} m²`} />
-                  <Dato k="Construcción" v={`${casa.m2Construccion} m²`} />
-                  <Dato k="Niveles" v={String(casa.niveles)} />
-                  <Dato k="Entrega" v={casa.entrega} />
-                  <Dato k="Estado" v={casa.estado} />
-                  <Dato k="Precio" v={mxn(casa.precio)} />
-                </dl>
-
-                <p className="mt-5 text-sm leading-relaxed text-stone-600">{casa.descripcion}</p>
-
-                <p className="mt-5 text-[10px] font-semibold uppercase tracking-widest text-stone-500">Amenidades</p>
-                <ul className="mt-2 grid gap-1.5 text-sm sm:grid-cols-2">
-                  {casa.amenidades.map((a) => (
-                    <li key={a} className="flex items-center gap-2 text-stone-700">
-                      <IconCheck className="h-4 w-4 shrink-0 text-stone-500" /> {a}
-                    </li>
-                  ))}
-                </ul>
-
-                <p className="mt-5 text-xs text-stone-500">{casa.direccion}</p>
-
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <a
-                    href={waLink(`Hola, me interesa ${casa.nombre} en ${casa.ciudad}.`)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-[#1ebe5b]"
-                  >
-                    <IconWhatsApp className="h-4 w-4" /> WhatsApp
-                  </a>
-                  <button
-                    onClick={() => setDetalle(true)}
-                    className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-800 shadow-sm transition-all hover:bg-stone-100"
-                  >
-                    Ver galería y mapa
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={meInteresa}
+            className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-stone-800 shadow-sm transition-all hover:bg-stone-100"
+          >
+            Me interesa
+          </button>
         </div>
       </div>
 
       {/* Modal con el detalle completo (galería, mapa, amenidades, contacto) */}
       {detalle && <CasaDetalleModal casa={casa} onClose={() => setDetalle(false)} />}
     </article>
-  );
-}
-
-function Dato({ k, v }: { k: string; v: string }) {
-  return (
-    <div>
-      <dt className="text-xs uppercase tracking-wider text-stone-500">{k}</dt>
-      <dd className="mt-0.5 font-medium text-stone-900">{v}</dd>
-    </div>
   );
 }

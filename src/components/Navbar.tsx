@@ -112,21 +112,25 @@ export default function Navbar() {
         }`}
       />
 
-      {/* ---------- Móvil: solo botón hamburguesa flotante ---------- */}
+      {/* ---------- Móvil: solo botón hamburguesa flotante (glass) ---------- */}
       <div className="flex justify-end px-4 pt-4 md:hidden">
         <button
           onClick={() => setOpen(!open)}
           aria-label="Menú"
           aria-expanded={open}
-          className="grid h-12 w-12 place-items-center rounded-full bg-white text-stone-900 shadow-card ring-1 ring-stone-200/60 transition active:scale-95"
+          className={`grid h-12 w-12 place-items-center rounded-full border backdrop-blur-xl transition-all duration-300 active:scale-95 ${
+            open || !scrolled
+              ? "border-white/35 bg-white/15 text-white shadow-lg"
+              : "border-white/60 bg-white/75 text-stone-900 shadow-card"
+          }`}
         >
           {open ? <IconX className="h-5 w-5" /> : <IconMenu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Desplegable móvil */}
+      {/* Desplegable móvil: panel glass oscuro con acento dorado */}
       <div
-        className={`mx-4 mt-2 origin-top-right rounded-3xl bg-white p-3 shadow-2xl ring-1 ring-stone-200/60 transition-all duration-300 ease-out md:hidden ${
+        className={`mx-4 mt-2 origin-top-right overflow-hidden rounded-3xl border border-white/15 bg-ink/80 p-3 shadow-2xl backdrop-blur-2xl transition-all duration-300 ease-out md:hidden ${
           open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-3 scale-95 opacity-0"
         }`}
       >
@@ -138,11 +142,16 @@ export default function Navbar() {
               onClick={(e) => { e.preventDefault(); irA(s.id); }}
               tabIndex={open ? 0 : -1}
               style={{ transitionDelay: open ? `${60 + i * 40}ms` : "0ms" }}
-              className={`rounded-2xl px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all duration-300 ${
+              className={`flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all duration-300 ${
                 open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-              } ${activa === s.id ? "bg-stone-900 text-white" : "text-stone-900 hover:bg-stone-100"}`}
+              } ${
+                activa === s.id
+                  ? "border border-sand/40 bg-white/10 text-sand"
+                  : "text-white/85 hover:bg-white/10 hover:text-white"
+              }`}
             >
               {s.label}
+              {activa === s.id && <span className="h-1.5 w-1.5 rounded-full bg-sand" />}
             </a>
           ))}
           <a
@@ -151,7 +160,7 @@ export default function Navbar() {
             rel="noreferrer"
             tabIndex={open ? 0 : -1}
             style={{ transitionDelay: open ? `${60 + SECCIONES.length * 40}ms` : "0ms" }}
-            className={`mt-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-3 text-sm font-semibold uppercase tracking-wider text-white transition-all duration-300 ${
+            className={`mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-sand px-4 py-3 text-sm font-semibold uppercase tracking-wider text-ink shadow-lg transition-all duration-300 active:scale-[0.98] ${
               open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
             }`}
           >
