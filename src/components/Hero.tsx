@@ -40,13 +40,13 @@ export default function Hero() {
 
       {/* ---------- Capa 2 · Titular gigante (detrás de la casa) ---------- */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-[59svh] sm:bottom-[66svh] z-10 flex flex-col items-center px-4"
+        className="pointer-events-none absolute inset-x-0 bottom-[59svh] sm:bottom-[60svh] z-10 flex flex-col items-center px-4"
         style={layer(14)}
       >
         <p className="mb-3 whitespace-nowrap text-[8px] sm:text-[10px] font-semibold tracking-[0.35em] uppercase text-white/55">
           Puebla &amp; Puerto Escondido
         </p>
-        <h1 className="font-display text-center uppercase leading-[0.95] tracking-[0.04em] text-[clamp(2rem,11vw,7rem)] font-medium select-none filter-[drop-shadow(0_10px_24px_rgb(0_0_0/0.45))]">
+        <h1 className="font-display text-center uppercase leading-[0.95] tracking-[0.04em] text-[clamp(2rem,11vw,7rem)] sm:text-[clamp(2.5rem,7.5vw,5.5rem)] font-medium select-none filter-[drop-shadow(0_10px_24px_rgb(0_0_0/0.45))]">
           <span className="block whitespace-nowrap text-transparent bg-clip-text bg-linear-to-b from-white via-white/90 to-white/45">
             Espacios que
           </span>
@@ -54,11 +54,31 @@ export default function Hero() {
             Inspiran
           </span>
         </h1>
+
+        <p className="mt-3 font-display italic text-lg sm:text-2xl text-white/95 [text-shadow:0_2px_14px_rgb(0_0_0/60%)]">
+          tu forma de vivir.
+        </p>
+
+        <div className="pointer-events-auto mt-5 flex flex-row flex-nowrap items-center justify-center gap-3">
+          <a
+            href="#propiedades"
+            className="inline-flex h-10 sm:h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/40 bg-white/15 px-4 sm:px-6 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
+          >
+            Ver propiedades <IconArrow className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          </a>
+
+          <a
+            href="#contacto"
+            className="inline-flex h-10 sm:h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/30 bg-white/10 px-4 sm:px-6 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
+          >
+            Agendar visita
+          </a>
+        </div>
       </div>
 
       {/* ---------- Capa 3 · Casa recortada en primer plano ---------- */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[62svh] sm:h-[72svh]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[62svh] sm:h-[58svh]"
         style={layer(-6)}
       >
         <Img
@@ -70,31 +90,6 @@ export default function Hero() {
         />
       </div>
 
-      {/* ---------- Capa 3.5 · Velo inferior para legibilidad ---------- */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-64 bg-linear-to-t from-black/50 via-black/20 to-transparent" />
-
-      {/* ---------- Capa 4 · Contenido inferior ---------- */}
-      <div className="absolute inset-x-0 bottom-0 z-30 flex flex-col items-center px-6 pb-24 text-center sm:pb-14">
-        <p className="font-display italic text-xl sm:text-2xl text-white/95 [text-shadow:0_2px_14px_rgb(0_0_0/60%)]">
-          tu forma de vivir.
-        </p>
-
-        <div className="mt-6 grid w-full max-w-md grid-cols-2 gap-3">
-          <a
-            href="#propiedades"
-            className="inline-flex h-11 sm:h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/40 bg-white/15 px-3 sm:px-6 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/25 hover:border-white/70 hover:scale-105 shadow-lg"
-          >
-            Ver propiedades <IconArrow className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          </a>
-
-          <a
-            href="#contacto"
-            className="inline-flex h-11 sm:h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/30 bg-white/10 px-3 sm:px-6 text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/50 shadow-lg"
-          >
-            Agendar visita
-          </a>
-        </div>
-      </div>
     </section>
   );
 }
