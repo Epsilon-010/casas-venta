@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { casas } from "../data/casas";
 import { IconCheck, IconArrow } from "./Icons";
-import { EVENTO_ELEGIR_CASA } from "../lib/secciones";
+import { EVENTO_ELEGIR_CASA, abrirLegal } from "../lib/secciones";
 
 /**
  * Formulario de contacto. Por ahora NO envía a ningún backend: muestra
@@ -68,7 +68,13 @@ export default function ContactForm({ casaSlug, compact = false }: { casaSlug?: 
       </div>
       <div className={compact ? "" : "sm:col-span-2"}>
         <button type="submit" className="btn-primary w-full">Enviar solicitud <IconArrow className="h-4 w-4" /></button>
-        <p className="mt-3 text-center text-[11px] text-ink-soft">Tus datos solo se usan para contactarte sobre estas casas. Nunca se comparten.</p>
+        <p className="mt-3 text-center text-[11px] text-ink-soft">
+          Al enviar aceptas el{" "}
+          <button type="button" onClick={() => abrirLegal("privacidad")} className="font-medium underline underline-offset-2 hover:text-ink">
+            Aviso de Privacidad
+          </button>
+          . Tus datos solo se usan para contactarte sobre estas casas.
+        </p>
       </div>
     </form>
   );

@@ -1,6 +1,8 @@
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
+import LegalModal from "./components/LegalModal";
+import CookieBanner from "./components/CookieBanner";
 import Home from "./pages/Home";
 
 /**
@@ -16,6 +18,8 @@ export default function App() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <LegalModal />
+      <CookieBanner />
     </>
   );
 }

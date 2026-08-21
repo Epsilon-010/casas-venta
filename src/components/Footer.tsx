@@ -1,7 +1,7 @@
 import { casasPorCiudad } from "../data/casas";
 import { CONTACTO, waLink } from "../lib/format";
 import { IconArrowUpRight, IconWhatsApp } from "./Icons";
-import { SECCIONES } from "../lib/secciones";
+import { SECCIONES, abrirLegal } from "../lib/secciones";
 
 export default function Footer() {
   return (
@@ -80,8 +80,14 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col gap-4 border-t border-stone-800/60 pt-8 text-[11px] text-stone-500 sm:mt-16 sm:flex-row sm:items-center sm:justify-between">
           <p className="tracking-wide">© {new Date().getFullYear()} · Venta directa de propietario.</p>
-          <div className="flex items-center gap-4 font-medium text-stone-400">
-            <span>Trato directo</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-stone-400">
+            <button onClick={() => abrirLegal("privacidad")} className="transition-colors hover:text-stone-100">
+              Aviso de privacidad
+            </button>
+            <span className="h-1 w-1 rounded-full bg-[#c8a97e]" />
+            <button onClick={() => abrirLegal("terminos")} className="transition-colors hover:text-stone-100">
+              Términos y condiciones
+            </button>
             <span className="h-1 w-1 rounded-full bg-[#c8a97e]" />
             <span>Puebla & Puerto Escondido</span>
           </div>

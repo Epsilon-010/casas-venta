@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Casa } from "../data/casas";
 import { mxn, waLink } from "../lib/format";
 import { EVENTO_ELEGIR_CASA, irASeccion } from "../lib/secciones";
+import { EVENTO_CONSENTIMIENTO, getConsentimiento, setConsentimiento } from "../lib/consent";
 import Img from "./Img";
 import {
   IconArea,
@@ -27,6 +28,14 @@ export default function CasaDetalleModal({ casa, onClose }: { casa: Casa; onClos
   // Estado del iframe del mapa: si Google tarda o no responde, mostramos un fallback
   const [mapaEstado, setMapaEstado] = useState<"cargando" | "listo" | "error">("cargando");
   const [mapaIntento, setMapaIntento] = useState(0);
+  // El iframe de Google puede instalar cookies de terceros: solo se carga con consentimiento
+  const [cookiesOk, setCookiesOk] = useState(() => getConsentimiento() === "aceptadas");
+
+  useEffect(() => {
+    const onCambio = () => setCookiesOk(getConsentimiento() === "aceptadas");
+    window.addEventListener(EVENTO_CONSENTIMIENTO, onCambio);
+    return () => window.removeEventListener(EVENTO_CONSENTIMIENTO, onCambio);
+  }, []);
 
   const total = casa.imagenes.length;
   const prev = () => setIdx((i) => (i - 1 + total) % total);
@@ -36,11 +45,12 @@ export default function CasaDetalleModal({ casa, onClose }: { casa: Casa; onClos
   const mapaUrl = `https://www.google.com/maps/search/?api=1&query=${casa.mapa.lat},${casa.mapa.lng}`;
 
   // Si el mapa no termina de cargar en 8 s, lo damos por fallido
+  // (solo cuenta cuando el iframe existe, es decir, con cookies autorizadas)
   useEffect(() => {
-    if (mapaEstado !== "cargando") return;
+    if (!cookiesOk || mapaEstado !== "cargando") return;
     const t = setTimeout(() => setMapaEstado("error"), 8000);
     return () => clearTimeout(t);
-  }, [mapaEstado, mapaIntento]);
+  }, [cookiesOk, mapaEstado, mapaIntento]);
 
   const reintentarMapa = () => {
     setMapaEstado("cargando");
@@ -202,7 +212,24 @@ export default function CasaDetalleModal({ casa, onClose }: { casa: Casa; onClos
             <h3 className="font-display text-2xl font-medium sm:text-3xl">Ubicación</h3>
             <p className="mt-2 text-sm text-ink-soft">{casa.colonia}, {casa.ciudad}{casa.estado !== casa.ciudad ? `, ${casa.estado}` : ""}</p>
             <div className="relative mt-4 overflow-hidden rounded-3xl border border-stone-200">
-              {mapaEstado === "error" ? (
+              {!cookiesOk ? (
+                <div className="grid aspect-16/9 w-full place-items-center bg-mist p-6 sm:aspect-21/9">
+                  <div className="text-center">
+                    <p className="mx-auto max-w-sm text-sm text-ink-soft">
+                      El mapa de Google Maps puede instalar cookies de terceros. Se muestra solo si
+                      lo autorizas.
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                      <button onClick={() => setConsentimiento("aceptadas")} className="btn-primary">
+                        Cargar mapa
+                      </button>
+                      <a href={mapaUrl} target="_blank" rel="noreferrer" className="btn-ghost">
+                        Abrir en Google Maps <IconArrow className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ) : mapaEstado === "error" ? (
                 <div className="grid aspect-16/9 w-full place-items-center bg-mist p-6 sm:aspect-21/9">
                   <div className="text-center">
                     <p className="text-sm text-ink-soft">El mapa tardó demasiado en responder.</p>
