@@ -93,12 +93,12 @@ export default function Navbar() {
       <div
         aria-hidden="true"
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 -z-10 bg-ink/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 -z-10 bg-stone-950/20 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
 
-      {/* ---------- Móvil: solo botón hamburguesa flotante (glass) ---------- */}
+      {/* ---------- Móvil: botón hamburguesa flotante con estilo claro/crema ---------- */}
       <div className="flex justify-end px-4 pt-4 md:hidden">
         <button
           onClick={() => setOpen(!open)}
@@ -106,19 +106,19 @@ export default function Navbar() {
           aria-expanded={open}
           className={`grid h-12 w-12 place-items-center rounded-full border transition-all duration-300 active:scale-95 ${
             open
-              ? "border-white/35 bg-white/15 text-white shadow-lg backdrop-blur-xl"
+              ? "border-stone-300 bg-white text-stone-900 shadow-lg backdrop-blur-xl"
               : scrolled
-                ? "border-white/60 bg-white/75 text-stone-900 shadow-card backdrop-blur-xl"
-                : "border-transparent bg-transparent text-white"
+                ? "border-stone-900/20 bg-white/75 text-stone-900 shadow-sm backdrop-blur-xl"
+                : "border-white/40 bg-black/20 text-white backdrop-blur-md"
           }`}
         >
           {open ? <IconX className="h-5 w-5" /> : <IconMenu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Desplegable móvil: panel glass oscuro con acento dorado */}
+      {/* Desplegable móvil: panel claro/crema idéntico a la estética de laptop */}
       <div
-        className={`mx-4 mt-2 origin-top-right overflow-hidden rounded-3xl border border-white/15 bg-ink/80 p-3 shadow-2xl backdrop-blur-2xl transition-all duration-300 ease-out md:hidden ${
+        className={`mx-4 mt-2 origin-top-right overflow-hidden rounded-3xl border border-stone-200/80 bg-white/90 p-3 shadow-2xl backdrop-blur-2xl transition-all duration-300 ease-out md:hidden ${
           open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-3 scale-95 opacity-0"
         }`}
       >
@@ -134,12 +134,12 @@ export default function Navbar() {
                 open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
               } ${
                 activa === s.id
-                  ? "border border-sand/40 bg-white/10 text-sand"
-                  : "text-white/85 hover:bg-white/10 hover:text-white"
+                  ? "border border-stone-200 bg-stone-100 text-stone-900"
+                  : "text-stone-600 hover:bg-stone-50 hover:text-stone-900"
               }`}
             >
               {s.label}
-              {activa === s.id && <span className="h-1.5 w-1.5 rounded-full bg-sand" />}
+              {activa === s.id && <span className="h-1.5 w-1.5 rounded-full bg-stone-900" />}
             </a>
           ))}
           <a
@@ -148,7 +148,7 @@ export default function Navbar() {
             rel="noreferrer"
             tabIndex={open ? 0 : -1}
             style={{ transitionDelay: open ? `${60 + SECCIONES.length * 40}ms` : "0ms" }}
-            className={`mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-sand px-4 py-3 text-sm font-semibold uppercase tracking-wider text-ink shadow-lg transition-all duration-300 active:scale-[0.98] ${
+            className={`mt-2 inline-flex items-center justify-center gap-2 rounded-2xl border border-stone-900/25 bg-stone-900 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-white shadow-md transition-all duration-300 hover:bg-stone-800 active:scale-[0.98] ${
               open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
             }`}
           >
